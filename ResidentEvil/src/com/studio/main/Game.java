@@ -48,7 +48,6 @@ public class Game extends Canvas implements  Runnable {
     public static void main(String[] args) {
         Game game = new Game();
         game.start();
-
     }
 
     public void tick() {
@@ -91,7 +90,6 @@ public class Game extends Canvas implements  Runnable {
                 frames++;
                 delta--;
             }
-
             if(System.currentTimeMillis() - timer >= 1000) {
                 System.out.println("FPS: " + frames);
                 frames = 0;
