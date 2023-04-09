@@ -1,0 +1,14 @@
+-artes(sprites)
+-pause, game over, start menu
+-sistema de animaçâo player
+-controle do jogo pelo teclado
+-sistema para shooting
+-sistema criar mapa
+-sistema de varios leveis
+-inimigos
+-boss fight
+-coletar items
+-aumentar ataque ou defesa de acordo com item
+-sistema de dano
+-sistema para salvar e carregar o jogo
+-audio e musica
