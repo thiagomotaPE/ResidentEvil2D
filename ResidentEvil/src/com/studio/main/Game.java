@@ -1,11 +1,19 @@
 package com.studio.main;
 
+import com.studio.entities.Entity;
+import com.studio.entities.Player;
+import com.studio.graficos.Spritesheet;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Game extends Canvas implements  Runnable {
+public class Game extends Canvas implements  Runnable, KeyListener {
 
     private boolean isRunning = true;
     public static JFrame frame;
@@ -15,11 +23,19 @@ public class Game extends Canvas implements  Runnable {
     private final int HEIGHT = 160;
     private final int SCALE = 3;
 
+    public List<Entity> entities;
+    public Spritesheet spritesheet;
+    private Player player;
 
     public Game() {
+        addKeyListener(this);
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        entities = new ArrayList<Entity>();
+        spritesheet = new Spritesheet("/spritesheet.png");
+        player = new Player(0, 0, 16, 16, spritesheet.getSprite(32, 0, 16, 16));
+        entities.add(player);
     }
 
     public void initFrame() {
@@ -52,6 +68,10 @@ public class Game extends Canvas implements  Runnable {
 
     public void tick() {
         //logica do game
+        for(int i = 0; i < entities.size(); i++) {
+            Entity e = entities.get(i);
+            e.tick();
+        }
     }
     public void render() {
         //graficos do game
@@ -61,8 +81,13 @@ public class Game extends Canvas implements  Runnable {
             return;
         }
         Graphics g = image.getGraphics();
-        g.setColor(Color.BLACK);
+        g.setColor(Color.GREEN);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        for(int i = 0; i < entities.size(); i++) {
+            Entity e = entities.get(i);
+            e.render(g);
+        }
 
 
         g.dispose();
@@ -97,5 +122,41 @@ public class Game extends Canvas implements  Runnable {
             }
         }
         stop();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_RIGHT ||e.getKeyCode() == KeyEvent.VK_D) {
+            player.right = true;
+        }else if(e.getKeyCode() == KeyEvent.VK_LEFT ||e.getKeyCode() == KeyEvent.VK_A) {
+            player.left = true;
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_UP ||e.getKeyCode() == KeyEvent.VK_W) {
+            player.up = true;
+        }else if(e.getKeyCode() == KeyEvent.VK_DOWN ||e.getKeyCode() == KeyEvent.VK_S) {
+            player.down = true;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_RIGHT ||e.getKeyCode() == KeyEvent.VK_D) {
+            player.right = false;
+        }else if(e.getKeyCode() == KeyEvent.VK_LEFT ||e.getKeyCode() == KeyEvent.VK_A) {
+            player.left = false;
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_UP ||e.getKeyCode() == KeyEvent.VK_W) {
+            player.up = false;
+        }else if(e.getKeyCode() == KeyEvent.VK_DOWN ||e.getKeyCode() == KeyEvent.VK_S) {
+            player.down = false;
+        }
+
     }
 }
