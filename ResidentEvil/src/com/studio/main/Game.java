@@ -3,6 +3,7 @@ package com.studio.main;
 import com.studio.entities.Entity;
 import com.studio.entities.Player;
 import com.studio.graficos.Spritesheet;
+import com.studio.world.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,16 +16,18 @@ import java.util.List;
 
 public class Game extends Canvas implements  Runnable, KeyListener {
 
+    private Thread thread;
     private boolean isRunning = true;
     public static JFrame frame;
     private BufferedImage image;
-    private Thread thread;
+
     private  final int WIDTH = 240;
     private final int HEIGHT = 160;
     private final int SCALE = 3;
 
     public List<Entity> entities;
     public static Spritesheet spritesheet;
+    public static World world;
     private Player player;
 
     public Game() {
@@ -34,6 +37,7 @@ public class Game extends Canvas implements  Runnable, KeyListener {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<Entity>();
         spritesheet = new Spritesheet("/spritesheet.png");
+        world = new World("/map.png");
         player = new Player(0, 0, 16, 16, spritesheet.getSprite(32, 0, 16, 16));
         entities.add(player);
     }
@@ -81,8 +85,9 @@ public class Game extends Canvas implements  Runnable, KeyListener {
             return;
         }
         Graphics g = image.getGraphics();
-        g.setColor(Color.GREEN);
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+        world.render(g);
 
         for(int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
