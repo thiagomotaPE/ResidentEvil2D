@@ -1,6 +1,7 @@
 package com.studio.entities;
 
 import com.studio.main.Game;
+import com.studio.world.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,7 +29,7 @@ public class Entity {
 
     }
     public void render(Graphics g) {
-        g.drawImage(sprite, this.getX(), this.getY(), null);
+        g.drawImage(sprite, this.getX() - Camera.x, this.getY() - Camera.y, null);
     }
 
     public int getX() {
