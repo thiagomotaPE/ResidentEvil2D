@@ -13,6 +13,7 @@ public class World {
         try {
             BufferedImage map = ImageIO.read(getClass().getResource(path));
             int [] pixels = new int[map.getWidth() * map.getHeight()];
+
             WIDTH = map.getWidth();
             HEIGHT = map.getHeight();
             tiles = new Tile[map.getWidth() * map.getHeight()];
@@ -32,12 +33,14 @@ public class World {
 
                     }else {
                         //floor
+                        tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
                     }
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
     public void render(Graphics g) {
         for (int xx = 0; xx < WIDTH; xx++) {

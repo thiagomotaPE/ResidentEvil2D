@@ -38,6 +38,7 @@ public class Game extends Canvas implements  Runnable, KeyListener {
         entities = new ArrayList<Entity>();
         spritesheet = new Spritesheet("/spritesheet.png");
         world = new World("/map.png");
+        //ISSO AQUI TA CERTO?
         player = new Player(0, 0, 16, 16, spritesheet.getSprite(32, 0, 16, 16));
         entities.add(player);
     }
@@ -87,6 +88,7 @@ public class Game extends Canvas implements  Runnable, KeyListener {
         Graphics g = image.getGraphics();
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
         world.render(g);
 
         for(int i = 0; i < entities.size(); i++) {
