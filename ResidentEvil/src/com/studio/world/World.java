@@ -1,5 +1,8 @@
 package com.studio.world;
 
+import com.studio.entities.*;
+import com.studio.main.Game;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -21,6 +24,7 @@ public class World {
             for (int xx = 0; xx < map.getWidth(); xx++) {
                 for (int yy = 0; yy < map.getHeight(); yy++) {
                     int pixelAtual = pixels[xx + (yy * map.getWidth())];
+                    tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
                     if(pixelAtual == 0xFF000000) {
                         //floor
                         tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
@@ -29,11 +33,20 @@ public class World {
                         tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_WALL);
                     }else if(pixelAtual == 0xFF0000FF) {
                         //player
-                        tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
-
-                    }else {
-                        //floor
-                        tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
+                        Game.player.setX(xx*16);
+                        Game.player.setY(yy*16);
+                    }else if(pixelAtual == 0xFFFF0000) {
+                        //enemy
+                        Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY_EN));
+                    }else if(pixelAtual == 0xFF606060) {
+                        //weapon
+                        Game.entities.add(new Weapon(xx*16, yy*16, 16, 16, Entity.WEAPON_EN));
+                    }else if(pixelAtual == 0xFFFFD800) {
+                        //bullet
+                        Game.entities.add(new Bullet(xx*16, yy*16, 16, 16, Entity.BULLET_EN));
+                    }else if(pixelAtual == 0xFF4CFF00) {
+                        //life
+                        Game.entities.add(new Life(xx*16, yy*16, 16, 16, Entity.LIFEPACK_EN));
                     }
                 }
             }
