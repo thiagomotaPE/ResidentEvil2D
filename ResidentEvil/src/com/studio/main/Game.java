@@ -1,5 +1,6 @@
 package com.studio.main;
 
+import com.studio.entities.Enemy;
 import com.studio.entities.Entity;
 import com.studio.entities.Player;
 import com.studio.graficos.Spritesheet;
@@ -13,6 +14,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game extends Canvas implements  Runnable, KeyListener {
 
@@ -26,16 +28,20 @@ public class Game extends Canvas implements  Runnable, KeyListener {
     public static final int SCALE = 3;
 
     public static List<Entity> entities;
+    public static List<Enemy> enemies;
     public static Spritesheet spritesheet;
     public static World world;
     public static Player player;
+    public static Random rand;
 
     public Game() {
+        rand = new Random();
         addKeyListener(this);
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<Entity>();
+        enemies = new ArrayList<Enemy>();
         spritesheet = new Spritesheet("/spritesheet.png");
         player = new Player(0, 0, 16, 16, spritesheet.getSprite(32, 0, 16, 16));
         entities.add(player);
