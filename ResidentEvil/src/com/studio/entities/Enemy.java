@@ -9,10 +9,20 @@ import java.awt.image.BufferedImage;
 
 public class Enemy extends Entity{
     private double speed = 0.6;
+    private int frames = 0, maxFrames = 10, index = 0, maxIndex = 3;
     private int maskx = 8, masky = 8, maskw = 10, maskh = 10;
-
+    private BufferedImage[] sprites;
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
+
         super(x, y, width, height, sprite);
+        sprites = new BufferedImage[4];
+        sprites[0] = Game.spritesheet.getSprite(112, 16, 16, 16);
+        sprites[1] = Game.spritesheet.getSprite(112 + 16, 16, 16, 16);
+        sprites[2] = Game.spritesheet.getSprite(112 + 32, 16, 16, 16);
+        sprites[3] = Game.spritesheet.getSprite(112 + 32, 32, 16, 16);
+
+
+
     }
 
     public void tick() {
@@ -29,6 +39,16 @@ public class Enemy extends Entity{
             if((int)y > Game.player.getY() && World.isFree(this.getX(), (int)(y - speed))
                     && !isColidding(this.getX(), (int)(y - speed)))
                 y -= speed;
+
+
+            frames++;
+            if(frames == maxFrames) {
+                frames = 0;
+                index++;
+                if(index > maxIndex) {
+                    index = 0;
+                }
+            }
     }
     public boolean isColidding(int xnext, int ynext) {
         Rectangle enemyCurrent = new Rectangle(xnext + maskx, ynext + masky, maskw, maskh);
@@ -45,9 +65,10 @@ public class Enemy extends Entity{
     }
 
     public void render(Graphics g) {
-        super.render(g);
-        g.setColor(Color.BLUE);
-        g.fillRect(this.getX() + maskx - Camera.x, this.getY() + masky - Camera.y, maskw, maskh);
+        g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+//        super.render(g);
+//        g.setColor(Color.BLUE);
+//        g.fillRect(this.getX() + maskx - Camera.x, this.getY() + masky - Camera.y, maskw, maskh);
 
     }
 }
