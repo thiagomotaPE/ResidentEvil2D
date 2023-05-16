@@ -26,20 +26,31 @@ public class Enemy extends Entity{
     }
 
     public void tick() {
-            if((int)x < Game.player.getX() && World.isFree((int)(x + speed), this.getY())
-                    && !isColidding((int)(x + speed), this.getY()))
+        if(isColiddingWithPlayer() == false) {
+            if ((int) x < Game.player.getX() && World.isFree((int) (x + speed), this.getY())
+                    && !isColidding((int) (x + speed), this.getY()))
                 x += speed;
-            if((int)x > Game.player.getX() && World.isFree((int)(x - speed), this.getY())
-                    && !isColidding((int)(x - speed), this.getY()))
+            if ((int) x > Game.player.getX() && World.isFree((int) (x - speed), this.getY())
+                    && !isColidding((int) (x - speed), this.getY()))
                 x -= speed;
 
-            if((int)y < Game.player.getY() && World.isFree(this.getX(), (int)(y + speed))
-                    && !isColidding(this.getX(), (int)(y + speed)))
+            if ((int) y < Game.player.getY() && World.isFree(this.getX(), (int) (y + speed))
+                    && !isColidding(this.getX(), (int) (y + speed)))
                 y += speed;
-            if((int)y > Game.player.getY() && World.isFree(this.getX(), (int)(y - speed))
-                    && !isColidding(this.getX(), (int)(y - speed)))
+            if ((int) y > Game.player.getY() && World.isFree(this.getX(), (int) (y - speed))
+                    && !isColidding(this.getX(), (int) (y - speed)))
                 y -= speed;
-
+        }else {
+            //estamos colidindo
+            if(Game.rand.nextInt(100) < 10) {
+                Game.player.life-= Game.rand.nextInt(3);
+                if(Game.player.life <= 0 ) {
+                    //Game over
+                    System.exit(1);
+                }
+                System.out.println("Vida: " + Game.player.life);
+            }
+        }
 
             frames++;
             if(frames == maxFrames) {
@@ -49,6 +60,13 @@ public class Enemy extends Entity{
                     index = 0;
                 }
             }
+    }
+
+    public boolean isColiddingWithPlayer() {
+        Rectangle enemyCurrent = new Rectangle(this.getX() + maskx, this.getY() + masky, maskw, maskh);
+        Rectangle player = new Rectangle(Game.player.getX(), Game.player.getY(), 16, 16);
+
+        return enemyCurrent.intersects(player);
     }
     public boolean isColidding(int xnext, int ynext) {
         Rectangle enemyCurrent = new Rectangle(xnext + maskx, ynext + masky, maskw, maskh);

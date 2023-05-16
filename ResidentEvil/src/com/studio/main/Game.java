@@ -4,6 +4,7 @@ import com.studio.entities.Enemy;
 import com.studio.entities.Entity;
 import com.studio.entities.Player;
 import com.studio.graficos.Spritesheet;
+import com.studio.graficos.UI;
 import com.studio.world.World;
 
 import javax.swing.*;
@@ -33,12 +34,14 @@ public class Game extends Canvas implements  Runnable, KeyListener {
     public static World world;
     public static Player player;
     public static Random rand;
+    public UI ui;
 
     public Game() {
         rand = new Random();
         addKeyListener(this);
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
+        ui = new UI();
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<Entity>();
         enemies = new ArrayList<Enemy>();
@@ -101,6 +104,7 @@ public class Game extends Canvas implements  Runnable, KeyListener {
             e.render(g);
         }
 
+        ui.render(g);
 
         g.dispose();
         g = bs.getDrawGraphics();
