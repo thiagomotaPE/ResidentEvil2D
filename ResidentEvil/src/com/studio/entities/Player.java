@@ -16,7 +16,10 @@ public class Player extends Entity{
     private boolean moved = false;
     private BufferedImage[] rightPlayer;
     private BufferedImage[] leftPlayer;
+    private BufferedImage playerDamage;
     public int ammo = 3;
+    public boolean isDamaged = false;
+    private int damageFrames = 0;
     public static double life = 100, maxLife = 100;
     public Player(int x, int y, int width, int height, BufferedImage sprite) {
 
@@ -24,6 +27,7 @@ public class Player extends Entity{
 
         rightPlayer = new BufferedImage[4];
         leftPlayer = new BufferedImage[4];
+        playerDamage = Game.spritesheet.getSprite(0, 16, 16, 16);
         for( int i = 0; i < 4; i++){
             rightPlayer[i] = Game.spritesheet.getSprite(32 + (i*16), 0, 16, 16);
 
@@ -65,6 +69,13 @@ public class Player extends Entity{
         }
         this.checkCollisionAmmo();
         this.checkCollisionLife();
+        if(isDamaged) {
+            this.damageFrames++;
+            if(this.damageFrames == 8) {
+                this.damageFrames = 0;
+                isDamaged = false;
+            }
+        }
         Camera.x =Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
         Camera.y =Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
     }
@@ -101,10 +112,14 @@ public class Player extends Entity{
         }
     }
     public void render(Graphics g) {
-        if(dir == right_dir) {
-            g.drawImage(rightPlayer[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
-        }else if(dir == left_dir) {
-            g.drawImage(leftPlayer[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+        if(!isDamaged) {
+            if(dir == right_dir) {
+                g.drawImage(rightPlayer[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+            }else if(dir == left_dir) {
+                g.drawImage(leftPlayer[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+            }
+        }else {
+            g.drawImage(playerDamage, this.getX() - Camera.x, this.getY() - Camera.y, null);
         }
     }
 }
