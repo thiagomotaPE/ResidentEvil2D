@@ -51,7 +51,9 @@ public class World {
                         Game.entities.add(new Bullet(xx*16, yy*16, 16, 16, Entity.BULLET_EN));
                     }else if(pixelAtual == 0xFF4CFF00) {
                         //life
-                        Game.entities.add(new Life(xx*16, yy*16, 16, 16, Entity.LIFEPACK_EN));
+                        Life pack = new Life(xx*16, yy*16, 16, 16, Entity.LIFEPACK_EN);
+                        pack.setMask(8, 8, 8, 8);
+                        Game.entities.add(pack);
                     }
                 }
             }
