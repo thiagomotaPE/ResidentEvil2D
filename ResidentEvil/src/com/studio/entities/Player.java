@@ -1,11 +1,13 @@
 package com.studio.entities;
 
+import com.studio.graficos.Spritesheet;
 import com.studio.main.Game;
 import com.studio.world.Camera;
 import com.studio.world.World;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player extends Entity{
     public boolean right, up, left, down;
@@ -20,7 +22,7 @@ public class Player extends Entity{
     public int ammo = 3;
     public boolean isDamaged = false;
     private int damageFrames = 0;
-    public static double life = 100, maxLife = 100;
+    public  double life = 100, maxLife = 100;
     public Player(int x, int y, int width, int height, BufferedImage sprite) {
 
         super(x, y, width, height, sprite);
@@ -75,6 +77,15 @@ public class Player extends Entity{
                 this.damageFrames = 0;
                 isDamaged = false;
             }
+        }
+        if(life <= 0) {
+            Game.entities = new ArrayList<Entity>();
+            Game.enemies = new ArrayList<Enemy>();
+            Game.spritesheet = new Spritesheet("/spritesheet.png");
+            Game.player = new Player(0, 0, 16, 16, Game.spritesheet.getSprite(32, 0, 16, 16));
+            Game.entities.add(Game.player);
+            Game.world = new World("/map.png");
+            return;
         }
         Camera.x =Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
         Camera.y =Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
