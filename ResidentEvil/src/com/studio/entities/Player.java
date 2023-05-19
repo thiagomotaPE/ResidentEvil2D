@@ -20,10 +20,12 @@ public class Player extends Entity{
     private BufferedImage[] leftPlayer;
     private BufferedImage playerDamage;
     private boolean hasGun = false;
-    public int ammo = 3;
+    public int ammo = 4;
     public boolean isDamaged = false;
     private int damageFrames = 0;
+    public boolean shoot, mouseShoot = false;
     public  double life = 100, maxLife = 100;
+    public int mx, my;
     public Player(int x, int y, int width, int height, BufferedImage sprite) {
 
         super(x, y, width, height, sprite);
@@ -73,6 +75,7 @@ public class Player extends Entity{
         this.checkCollisionGun();
         this.checkCollisionAmmo();
         this.checkCollisionLife();
+
         if(isDamaged) {
             this.damageFrames++;
             if(this.damageFrames == 8) {
@@ -80,6 +83,53 @@ public class Player extends Entity{
                 isDamaged = false;
             }
         }
+
+        if(shoot) {
+            shoot = false;
+            if(hasGun && ammo > 0) {
+                //criar bala e atirar
+                ammo--;
+
+                int dx = 0;
+                int px = 0;
+                int py = 7;
+                if(dir == right_dir) {
+                    px = 20;
+                    dx = 1;
+                }else {
+                    px = -8;
+                    dx = -1;
+                }
+                BulletShoot bullet = new BulletShoot(this.getX() + px, this.getY() + py, 3, 3, null, dx, 0);
+                Game.bullets.add(bullet);
+            }
+        }
+
+        if(mouseShoot) {
+            mouseShoot = false;
+            if(hasGun && ammo > 0) {
+                //criar bala e atirar
+                ammo--;
+
+
+                int px = 0;
+                int py = 7;
+                double angle = 0;
+                if(dir == right_dir) {
+                    px = 20;
+                    angle = Math.toDegrees(Math.atan2(my - (this.getY() + py - Camera.y), mx - (this.getX() + px - Camera.x)));
+                }else {
+                    px = -8;
+                    angle = Math.toDegrees(Math.atan2(my - (this.getY() + py - Camera.y), mx - (this.getX() + px - Camera.x)));
+                }
+                double dx = Math.cos(angle);
+                double dy = Math.sin(angle);
+
+                BulletShoot bullet = new BulletShoot(this.getX() + px, this.getY() + py, 3, 3, null, dx, dy);
+                Game.bullets.add(bullet);
+            }
+        }
+
         if(life <= 0) {
             Game.entities = new ArrayList<Entity>();
             Game.enemies = new ArrayList<Enemy>();
@@ -113,7 +163,7 @@ public class Player extends Entity{
             if(ammo < 12) {
                 if(atual instanceof Bullet) {
                     if(Entity.isColidding(this, atual)) {
-                        ammo += 3;
+                        ammo += 4;
                         //System.out.println(ammo);
                         Game.entities.remove(atual);
                     }

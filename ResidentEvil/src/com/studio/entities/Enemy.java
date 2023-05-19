@@ -12,6 +12,9 @@ public class Enemy extends Entity{
     private int frames = 0, maxFrames = 10, index = 0, maxIndex = 3;
     private int maskx = 8, masky = 8, maskw = 10, maskh = 10;
     private BufferedImage[] sprites;
+    private int life = 8;
+    private boolean isDamaged = false;
+    private int damageFrames = 10, damageCurrent = 0;
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
 
         super(x, y, width, height, sprite);
@@ -61,8 +64,40 @@ public class Enemy extends Entity{
                     index = 0;
                 }
             }
+
+            collidingBullet();
+
+            if(life <= 0) {
+                destroySelf();
+                return;
+            }
+
+            if(isDamaged) {
+                this.damageCurrent++;
+                if(this.damageCurrent == this.damageFrames) {
+                    this.damageCurrent = 0;
+                    this.isDamaged = false;
+                }
+            }
     }
 
+    public void destroySelf() {
+        Game.entities.remove(this);
+    }
+
+    public void collidingBullet() {
+        for (int i = 0; i < Game.bullets.size(); i++) {
+            Entity e = Game.bullets.get(i);
+            if(e instanceof BulletShoot) {
+                if(Entity.isColidding(this, e)) {
+                    isDamaged = true;
+                    life -= 2;
+                    Game.bullets.remove(i);
+                    return;
+                }
+            }
+        }
+    }
     public boolean isColiddingWithPlayer() {
         Rectangle enemyCurrent = new Rectangle(this.getX() + maskx, this.getY() + masky, maskw, maskh);
         Rectangle player = new Rectangle(Game.player.getX(), Game.player.getY(), 16, 16);
@@ -84,8 +119,10 @@ public class Enemy extends Entity{
     }
 
     public void render(Graphics g) {
-        g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
-//        super.render(g);
+        if(!isDamaged)
+            g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+        else
+            g.drawImage(Entity.ENEMY_FEEDBACK, this.getX() - Camera.x, this.getY() - Camera.y, null);
 //        g.setColor(Color.BLUE);
 //        g.fillRect(this.getX() + maskx - Camera.x, this.getY() + masky - Camera.y, maskw, maskh);
 
