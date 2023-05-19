@@ -20,7 +20,7 @@ public class Player extends Entity{
     private BufferedImage[] leftPlayer;
     private BufferedImage playerDamage;
     private boolean hasGun = false;
-    public int ammo = 4;
+    public int ammo = 5;
     public boolean isDamaged = false;
     private int damageFrames = 0;
     public boolean shoot, mouseShoot = false;
@@ -160,10 +160,10 @@ public class Player extends Entity{
     public void checkCollisionAmmo() {
         for(int i = 0; i < Game.entities.size(); i++) {
             Entity atual = Game.entities.get(i);
-            if(ammo < 12) {
+            if(ammo < 20) {
                 if(atual instanceof Bullet) {
                     if(Entity.isColidding(this, atual)) {
-                        ammo += 4;
+                        ammo += 5;
                         //System.out.println(ammo);
                         Game.entities.remove(atual);
                     }
