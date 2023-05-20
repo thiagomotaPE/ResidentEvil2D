@@ -12,7 +12,7 @@ public class Enemy extends Entity{
     private int frames = 0, maxFrames = 10, index = 0, maxIndex = 3;
     private int maskx = 8, masky = 8, maskw = 10, maskh = 10;
     private BufferedImage[] sprites;
-    private int life = 8;
+    private int life = 6;
     private boolean isDamaged = false;
     private int damageFrames = 10, damageCurrent = 0;
     public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
