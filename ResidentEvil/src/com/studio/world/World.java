@@ -1,12 +1,14 @@
 package com.studio.world;
 
 import com.studio.entities.*;
+import com.studio.graficos.Spritesheet;
 import com.studio.main.Game;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.studio.main.Game.world;
 
@@ -81,6 +83,15 @@ public class World {
                 (tiles[x3 + (y3 * world.WIDTH)] instanceof WallTile) ||
                 (tiles[x4 + (y4 * world.WIDTH)] instanceof WallTile));
 
+    }
+    public static void restartGame(String level) {
+        Game.entities = new ArrayList<Entity>();
+        Game.enemies = new ArrayList<Enemy>();
+        Game.spritesheet = new Spritesheet("/spritesheet.png");
+        Game.player = new Player(0, 0, 16, 16, Game.spritesheet.getSprite(32, 0, 16, 16));
+        Game.entities.add(Game.player);
+        Game.world = new World("/"+level);
+        return;
     }
     public void render(Graphics g) {
         int xstart = Camera.x >> 4;
