@@ -41,7 +41,10 @@ public class Game extends Canvas implements  Runnable, KeyListener, MouseListene
     public static Player player;
     public static Random rand;
     public UI ui;
-
+    public static String gameState = "GAME_ON";
+    private boolean showMessageGameover = true;
+    private int framesGameover  = 0;
+    private boolean restartGame = false;
     public Game() {
         rand = new Random();
         addKeyListener(this);
@@ -89,22 +92,42 @@ public class Game extends Canvas implements  Runnable, KeyListener, MouseListene
 
     public void tick() {
         //logica do game
-        for(int i = 0; i < entities.size(); i++) {
-            Entity e = entities.get(i);
-            e.tick();
-        }
-        for(int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).tick();
-        }
-        if(enemies.size() == 0) {
-            //proximo level
-            CUR_LEVEL++;
-            if(CUR_LEVEL > MAX_LEVEL) {
-                CUR_LEVEL = 1;
+        if(gameState == "GAME_ON") {
+            this.restartGame = false;
+            for(int i = 0; i < entities.size(); i++) {
+                Entity e = entities.get(i);
+                e.tick();
             }
-            String newWorld = "level" + CUR_LEVEL + ".png";
-            World.restartGame(newWorld);
+            for(int i = 0; i < bullets.size(); i++) {
+                bullets.get(i).tick();
+            }
+            if(enemies.size() == 0) {
+                //proximo level
+                CUR_LEVEL++;
+                if(CUR_LEVEL > MAX_LEVEL) {
+                    CUR_LEVEL = 1;
+                }
+                String newWorld = "level" + CUR_LEVEL + ".png";
+                World.restartGame(newWorld);
+            }
+        } else if (gameState == "GAME_OVER") {
+            this.framesGameover++;
+            if(this.framesGameover == 25) {
+                this.framesGameover = 0;
+                if(this.showMessageGameover)
+                    this.showMessageGameover = false;
+                else
+                    this.showMessageGameover = true;
+            }
+            if(restartGame) {
+                this.restartGame = false;
+                this.gameState = "GAME_ON";
+                CUR_LEVEL = 1;
+                String newWorld = "level" + CUR_LEVEL + ".png";
+                World.restartGame(newWorld);
+            }
         }
+
     }
     public void render() {
         //graficos do game
@@ -134,6 +157,19 @@ public class Game extends Canvas implements  Runnable, KeyListener, MouseListene
         g.setFont(new Font("arial", Font.BOLD, 17));
         g.setColor(Color.WHITE);
         g.drawString("Munição: " + player.ammo, 610, 40);
+        if(gameState == "GAME_OVER") {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(new Color(0, 0, 0, 100));
+            g2.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
+
+            g.setFont(new Font("arial", Font.BOLD, 30));
+            g.setColor(Color.WHITE);
+            g.drawString("GAME OVER", (WIDTH*SCALE)/2-80, (HEIGHT*SCALE)/2-20);
+            g.setFont(new Font("arial", Font.BOLD, 20));
+            if(showMessageGameover)
+                g.drawString("PRESSIONE ENTER PARA RECOMEÇAR", (WIDTH*SCALE)/2-170, (HEIGHT*SCALE)/2+10);
+
+        }
         bs.show();
     }
 
@@ -187,6 +223,9 @@ public class Game extends Canvas implements  Runnable, KeyListener, MouseListene
 
         if(e.getKeyCode() == KeyEvent.VK_SPACE) {
             player.shoot = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            this.restartGame = true;
         }
     }
 
